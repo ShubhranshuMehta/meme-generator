@@ -1,13 +1,70 @@
 import React from "react"
+import memesData from '../assets/memesData.js'
 
 export function Meme(){
+
+	const [meme,setmeme]=React.useState({
+		topText:'',
+		randomImg:'https://i.imgflip.com/1bgw.jpg',
+		bottomText:''
+	})
+
+
+
+	const [allMemeImages,setallMemeImages]=React.useState(memesData)
+
+	function changeHandler(event){
+		let memesArray=allMemeImages.data.memes
+		const randomNumber = Math.floor(Math.random() * memesArray.length)
+		setmeme(prevMeme => {
+			return {
+				...prevMeme,
+				[event.target.name]: event.target.value
+			}
+		})
+	}
+
+	function getMemeImage() {
+        const memesArray = allMemeImages.data.memes
+        const randomNumber = Math.floor(Math.random() * memesArray.length)
+        const url = memesArray[randomNumber].url
+        setmeme(prevMeme => ({
+            ...prevMeme,
+            randomImage: url
+        }))
+        
+    }
 	return(
-		<form className="meme">
-			<div className="meme-input">
-				<input type="text" name="meme-top" id="meme-top" placeholder="Shut up" />
-				<input type="text" name="meme-bottom" id="meme-bottom" placeholder="And take my money" />
-			</div>
-			<button>Get a new meme image</button>
-		</form>
+		<main>
+            <div className="form">
+                <input 
+                    type="text"
+                    placeholder="Top text"
+                    className="form--input"
+                    name="topText"
+                    value={meme.topText}
+                    onChange={changeHandler}
+                />
+                <input 
+                    type="text"
+                    placeholder="Bottom text"
+                    className="form--input right"
+                    name="bottomText"
+                    value={meme.bottomText}
+                    onChange={changeHandler}
+                />
+                <button 
+                    className="form--button"
+                    onClick={getMemeImage}
+                >
+                    Get a new meme image 🖼
+                </button>
+            </div>
+            <div className="meme">
+                <img src={meme.randomImage} className="meme--image" />
+                <h2 className="meme--text top">{meme.topText}</h2>
+                <h2 className="meme--text bottom">{meme.bottomText}</h2>
+            </div>
+        </main>
 		)
 }
